@@ -1,0 +1,73 @@
+version: '3.9'
+networks:
+  roboshop:
+    driver: bridge
+volumes:
+  # docker volume create mongodb
+  mongodb:
+  redis:
+  mysql:
+services:
+  catalogue:
+    image: catalogue:v1
+    container_name: catalogue
+    depends_on:
+      - mongodb
+  # docker run -d --name mongodb --network roboshop -v mongodb:/data/db mongodb:v1
+  mongodb:
+    image: mongodb:v1
+    container_name: mongodb
+    volumes:
+    - type: volume
+      source: mongodb
+      target: /data/db
+      volume:
+         nocopy: true
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+    - type: volume
+      source: redis
+      target: /data
+      volume: 
+         nocopy: true
+  web:
+    image: web:v1
+    container_name: web
+    ports:
+      - "80:80"
+    depends_on:
+      - catalogue
+      - user
+      - cart
+  user:
+    image: user:v1
+    container_name: user
+    depends_on:
+      - mongodb
+      - redis
+  cart:
+    image: cart:v1
+    container_name: cart
+    depends_on:
+      - catalogue
+      - redis
+  mysql:
+    image: mysql:v1
+    container_name: mysql
+    volumes:
+      - type: volume
+        source: mysql
+        target: /var/lib/mysql
+        volume: 
+          nocopy: true
+  shipping:
+    image: shipping:v1
+    container_name: shipping
+    depends_on:
+      - cart
+      - mysql
+ 
+
+
