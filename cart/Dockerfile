@@ -9,5 +9,7 @@ USER cart
 COPY package.json /opt/server/
 RUN npm install
 COPY server.js /opt/server/
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost:8080/health || exit 1
 CMD ["node", "server.js"]
 
