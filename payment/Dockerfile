@@ -3,7 +3,8 @@ FROM python:3.9
 EXPOSE 8080
 USER root
 
-ENV INSTANA_SERVICE_NAME=payment
+ENV CART_HOST=cart \
+    USER_HOST=user
 
 WORKDIR /app
 
