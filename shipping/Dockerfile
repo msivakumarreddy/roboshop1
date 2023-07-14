@@ -19,7 +19,8 @@ RUN mvn package
 FROM openjdk:8-jre-alpine3.9
 
 EXPOSE 8080
-
+RUN addgroup -S shipping && adduser -S shipping -G shipping
+USER shipping
 WORKDIR /opt/shipping
 
 ENV CART_ENDPOINT=cart:8080
